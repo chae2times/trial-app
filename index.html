@@ -1,0 +1,2971 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF8F2">
+<title>체험단</title>
+<style>
+:root{
+  --bg:#FBF8F2; --bg2:#F5EFE4; --card:#FFFFFF; --line:#EAE3D8; --line2:#F1EBE0;
+  --ink:#2A2622; --ink2:#7C736A; --ink3:#A79C90;
+  --brown:#A9714B; --brown2:#8C5A38; --gold:#D9A404; --green:#2F7A5A; --blue:#2B6CB0;
+  --red:#B4453C; --purple:#6B5B95;
+  --r:16px; --shadow:0 1px 2px rgba(42,38,34,.04), 0 8px 24px rgba(42,38,34,.05);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  background:var(--bg); color:var(--ink); font-size:15px; line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{max-width:780px;margin:0 auto;padding:0 0 104px}
+
+/* ── header ── */
+.top{position:sticky;top:0;z-index:30;background:rgba(251,248,242,.92);backdrop-filter:saturate(140%) blur(10px);
+  border-bottom:1px solid var(--line);padding:12px 18px 10px}
+.top .eyebrow{font-size:11px;letter-spacing:.08em;color:var(--ink3);font-weight:600}
+.top .ttl{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px}
+.top h1{font-size:20px;font-weight:800;margin:0;letter-spacing:-.02em}
+.top .count{font-size:11.5px;color:var(--ink2);background:var(--bg2);border:1px solid var(--line);
+  padding:5px 9px;border-radius:999px;white-space:nowrap}
+
+/* ── nav ── */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;background:rgba(255,255,255,.94);
+  backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.nav button{flex:1;background:none;border:0;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:3px;
+  color:var(--ink3);font-size:10.5px;font-weight:600;cursor:pointer;border-radius:12px}
+.nav button .ic{font-size:18px;line-height:1}
+.nav button.on{color:var(--ink)}
+.nav button.on .ic{transform:translateY(-1px)}
+
+/* ── layout bits ── */
+main{padding:16px 16px 8px}
+.sec{margin:22px 0 0}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 10px}
+.sec-h h2{font-size:14px;font-weight:800;margin:0;letter-spacing:-.01em}
+.sec-h .sub{font-size:11.5px;color:var(--ink3)}
+.grid{display:grid;gap:10px;grid-template-columns:1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;
+  box-shadow:var(--shadow);cursor:pointer;transition:transform .12s ease, border-color .12s ease}
+.card:active{transform:scale(.995)}
+.card .ct{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.card .nm{font-size:14.5px;font-weight:700;letter-spacing:-.015em;line-height:1.35}
+.card .meta{margin-top:6px;font-size:12px;color:var(--ink2);display:flex;gap:8px;flex-wrap:wrap}
+.card .note{margin-top:6px;font-size:11.5px;color:var(--ink3)}
+.plat{font-size:10.5px;font-weight:700;color:var(--brown2);background:#F7EFE6;border:1px solid #EFE2D3;
+  padding:3px 7px;border-radius:7px;white-space:nowrap}
+.st{font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:7px;border:1px solid transparent;white-space:nowrap}
+.st-applied{color:#8A6A00;background:#FDF6E0;border-color:#F2E3B8}
+.st-won{color:var(--green);background:#EAF5EF;border-color:#D3E9DE}
+.st-writing{color:var(--blue);background:#EAF1FA;border-color:#D5E3F4}
+.st-submitted{color:#0F766E;background:#E7F5F3;border-color:#CFE9E5}
+.st-done{color:#59524B;background:#F1EDE7;border-color:#E4DDD3}
+.st-lost{color:#9A8E82;background:#F6F3EE;border-color:#EBE5DC}
+.st-hold{color:#8A6A00;background:#FBF3E3;border-color:#EFE1C6}
+.dday{font-size:11px;font-weight:800;color:var(--ink2);margin-left:auto;white-space:nowrap}
+.dday.soon{color:#B45309}
+.dday.now{color:#fff;background:var(--red);padding:2px 6px;border-radius:6px}
+.dday.over{color:var(--red)}
+.fee{font-size:11px;color:var(--red);margin-top:5px}
+.prog{height:5px;background:var(--line2);border-radius:99px;overflow:hidden;margin-top:9px}
+.prog i{display:block;height:100%;background:var(--brown);border-radius:99px}
+
+/* ── stats ── */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;box-shadow:var(--shadow)}
+.stat .k{font-size:11px;color:var(--ink3);font-weight:600}
+.stat .v{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-top:3px}
+.stat .v small{font-size:11.5px;font-weight:700;color:var(--ink2);margin-left:2px}
+.stat .d{font-size:10.5px;color:var(--ink3);margin-top:2px}
+.stat.acc .v{color:var(--brown2)}
+
+/* ── chips / toolbar ── */
+.toolbar{display:flex;flex-direction:column;gap:9px}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:9px 12px;box-shadow:var(--shadow)}
+.search input{border:0;outline:0;background:none;flex:1;font-size:14px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:1px 0 3px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink2);
+  font-size:12px;font-weight:700;padding:7px 12px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.selrow{display:flex;gap:8px}
+.selrow select{flex:1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:12.5px;font-weight:600}
+
+/* ── buttons ── */
+.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;
+  font-size:13.5px;font-weight:700;cursor:pointer}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.brown{background:var(--brown);border-color:var(--brown);color:#fff}
+.btn.danger{color:var(--red);border-color:#EEDCDA;background:#FDF6F5}
+.btn.ghost{background:transparent}
+.btn.wide{width:100%}
+.fab{position:fixed;right:16px;bottom:86px;z-index:35;width:54px;height:54px;border-radius:50%;
+  border:0;background:var(--ink);color:#fff;font-size:26px;line-height:1;box-shadow:0 10px 24px rgba(42,38,34,.28);cursor:pointer}
+
+/* ── sheet / modal ── */
+.scrim{position:fixed;inset:0;background:rgba(30,26,22,.42);z-index:50;display:none}
+.scrim.on{display:block}
+.sheet{position:fixed;z-index:60;left:0;right:0;bottom:0;max-height:90vh;overflow-y:auto;
+  background:var(--bg);border-radius:22px 22px 0 0;box-shadow:0 -8px 40px rgba(42,38,34,.2);
+  transform:translateY(102%);transition:transform .22s ease;padding:0 0 calc(20px + env(safe-area-inset-bottom))}
+.sheet.on{transform:translateY(0)}
+.sheet .sh-top{position:sticky;top:0;background:var(--bg);padding:14px 18px 10px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px}
+.sheet .sh-top h3{margin:0;font-size:15.5px;font-weight:800;flex:1}
+.sheet .body{padding:14px 18px 4px}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:11.5px;font-weight:700;color:var(--ink2);margin-bottom:5px}
+.fld input,.fld select,.fld textarea{width:100%;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:10px 11px;font-size:14px;outline:none}
+.fld textarea{min-height:72px;resize:vertical}
+.fld.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fld.two > div{min-width:0}
+.fld.two label{display:block}
+.hint{font-size:11px;color:var(--ink3);margin-top:4px}
+.tline{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line2)}
+.tline:last-child{border-bottom:0}
+.tline input[type=checkbox]{width:18px;height:18px;accent-color:var(--brown)}
+.tline span{flex:1;font-size:13px}
+.tline.done span{color:var(--ink3);text-decoration:line-through}
+.tline .x{border:0;background:none;color:var(--ink3);font-size:15px;cursor:pointer;padding:2px 4px}
+.tadd{display:flex;gap:6px;margin-top:8px}
+.tadd input{flex:1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:13px}
+.sheet .foot{display:flex;gap:8px;padding:12px 18px 4px}
+.sheet .foot .btn{flex:1}
+
+/* ── calendar ── */
+.cal{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 12px 8px}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cal-h b{font-size:14.5px}
+.cal-h button{border:0;background:var(--bg2);width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:14px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px}
+.cal-dow span{text-align:center;font-size:10.5px;color:var(--ink3);font-weight:700;padding:2px 0}
+.cal-dow span.sun{color:#C0605A}
+.day{position:relative;aspect-ratio:1/1.06;border:0;background:none;border-radius:10px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12.5px}
+.day.blank{visibility:hidden}
+.day .n{font-weight:600}
+.day.today{background:var(--bg2);box-shadow:inset 0 0 0 1.5px var(--brown)}
+.day.sel{background:var(--ink);color:#fff}
+.day.sel .dot{background:#fff !important}
+.dots{display:flex;gap:2px;height:4px}
+.dot{width:4px;height:4px;border-radius:50%}
+.dot.a{background:var(--gold)} .dot.e{background:var(--red)} .dot.v{background:var(--purple)}
+.day.sun .n{color:#C0605A}
+.daylist{margin-top:10px;display:grid;gap:8px}
+
+/* ── settle ── */
+.money{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.mrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:11px 12px;box-shadow:var(--shadow)}
+.mrow .nm{flex:1;font-size:13px;font-weight:600;min-width:0}
+.mrow .nm small{display:block;color:var(--ink3);font-weight:500;font-size:11px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .amt{font-size:13.5px;font-weight:800;white-space:nowrap}
+.mrow .amt.plus{color:var(--green)} .mrow .amt.minus{color:var(--red)}
+.mrow .pay{border:1px solid var(--line);background:var(--bg2);border-radius:9px;font-size:11px;font-weight:700;padding:6px 9px;cursor:pointer}
+.mrow .pay.on{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ── misc ── */
+.empty{text-align:center;color:var(--ink3);font-size:13px;padding:26px 10px;line-height:1.7}
+.toast{position:fixed;left:50%;bottom:100px;transform:translate(-50%,14px);background:rgba(42,38,34,.94);color:#fff;
+  font-size:12.5px;font-weight:600;padding:10px 16px;border-radius:999px;opacity:0;pointer-events:none;
+  transition:.2s;z-index:80}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+details.help{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-top:10px}
+details.help summary{font-size:12.5px;font-weight:700;cursor:pointer}
+details.help p{font-size:12px;color:var(--ink2);margin:8px 0 0;line-height:1.6}
+@media(min-width:760px){
+  .grid{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .money{grid-template-columns:repeat(2,1fr)}
+}
+@media(min-width:900px){
+  .app{padding-bottom:24px}
+  .nav{position:static;bottom:auto;border-top:0;border-bottom:1px solid var(--line);
+    background:rgba(251,248,242,.92);padding:8px 16px;gap:8px;backdrop-filter:blur(10px)}
+  .nav button{flex:0 0 auto;flex-direction:row;gap:6px;font-size:12.5px;padding:8px 14px}
+  .nav button .ic{font-size:15px}
+  .nav button.on{background:var(--ink);color:#fff}
+  .fab{bottom:28px;right:calc((100vw - 780px)/2 + 16px)}
+  .sheet{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-46%);width:560px;border-radius:20px;
+    max-height:88vh;opacity:0;transition:opacity .16s ease, transform .16s ease}
+  .sheet.on{transform:translate(-50%,-50%);opacity:1}
+  .toast{bottom:32px}
+}
+</style>
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="체험단 신청·발표·후기 일정을 한눈에 보는 나만의 노트">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon-64.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="체험단">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="eyebrow">나만의 체험단 관리</div>
+    <div class="ttl">
+      <h1 id="hdrTitle">체험단 노트</h1>
+      <span class="count" id="hdrCount"></span>
+    </div>
+  </header>
+  <nav class="nav" id="nav">
+    <button data-action="view" data-view="home" class="on"><span class="ic">🏠</span>홈</button>
+    <button data-action="view" data-view="list"><span class="ic">📋</span>목록</button>
+    <button data-action="view" data-view="cal"><span class="ic">📅</span>캘린더</button>
+    <button data-action="view" data-view="money"><span class="ic">💰</span>정산</button>
+    <button data-action="view" data-view="set"><span class="ic">⚙️</span>설정</button>
+  </nav>
+  <main id="view"></main>
+</div>
+<button class="fab" id="fab" data-action="new" aria-label="체험단 추가">+</button>
+<div class="scrim" id="scrim" data-action="closeSheet"></div>
+<section class="sheet" id="sheet" aria-hidden="true"></section>
+<div class="toast" id="toast"></div>
+
+<script>
+const SEED = {
+  "meta": {
+    "appName": "체험단",
+    "owner": "본인",
+    "version": 2,
+    "updatedAt": "2026-11-21T21:35:00+09:00",
+    "source": "2026-11-21 신청분 전체 반영",
+    "note": "발표일·마감일은 사이트 공지가 계속 밀리는 곳이 있어(서울오빠 등) 확인 시점을 note에 남긴다."
+  },
+  "accounts": [
+    {
+      "platform": "서울오빠",
+      "login": "네이버 로그인",
+      "nick": "슬기로운채이생활",
+      "url": "https://www.seoulouba.co.kr/mypage/my_campaign.php"
+    },
+    {
+      "platform": "무신사",
+      "login": "카카오 QR",
+      "nick": "본인 계정",
+      "url": "https://www.musinsa.com/preuser/history"
+    },
+    {
+      "platform": "브랜드커넥트",
+      "login": "네이버 로그인",
+      "nick": "슬기로운 자취생활",
+      "url": "https://brandconnect.naver.com/"
+    },
+    {
+      "platform": "파블로",
+      "login": "아이디 로그인",
+      "nick": "슬기로운채이생활",
+      "url": "https://pavlovu.com/"
+    },
+    {
+      "platform": "강남맛집",
+      "login": "네이버 로그인",
+      "nick": "",
+      "url": "https://강남맛집.net/"
+    },
+    {
+      "platform": "가보자체험단",
+      "login": "네이버 로그인",
+      "nick": "",
+      "url": ""
+    },
+    {
+      "platform": "카카오톡 선물",
+      "login": "카카오톡 앱",
+      "nick": "",
+      "url": "카톡 > 선물하기 > 선물함 > 선물 체험단"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "so-kundal",
+      "name": "쿤달 허니앤마카다미아 샴푸+트리트먼트 718ml 세트",
+      "brand": "쿤달",
+      "platform": "서울오빠",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-17",
+      "announceAt": "2026-11-23",
+      "reviewStart": "2026-11-24",
+      "endAt": "2026-12-03",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://www.seoulouba.co.kr/campaign/?c=436009",
+      "note": "닉네임 슬기로운채이생활 · 발표일 11/19→11/23으로 두 번 밀림. 선정 시 배송 1~2일.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "so-philiday",
+      "name": "필리데이 닥터NMN300",
+      "brand": "필리데이",
+      "platform": "서울오빠",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-17",
+      "announceAt": "2026-11-23",
+      "reviewStart": "2026-11-24",
+      "endAt": "2026-11-30",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://www.seoulouba.co.kr/campaign/?c=435636",
+      "note": "발표일 11/19→11/23으로 밀림.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "so-gwangdong",
+      "name": "광동 365케어 녹차카테킨",
+      "brand": "광동제약",
+      "platform": "서울오빠",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-12",
+      "announceAt": "2026-11-20",
+      "reviewStart": "2026-11-21",
+      "endAt": "2026-12-07",
+      "visitAt": null,
+      "price": 28000,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [
+        {
+          "t": "사진 15~20장 이상",
+          "done": false
+        },
+        {
+          "t": "영상 1개",
+          "done": false
+        },
+        {
+          "t": "본문 2,000자 이상",
+          "done": false
+        },
+        {
+          "t": "필수 키워드 '녹차카테킨' 제목 1회·본문 3회",
+          "done": false
+        },
+        {
+          "t": "필수 해시태그",
+          "done": false
+        },
+        {
+          "t": "6개월 유지",
+          "done": false
+        }
+      ],
+      "url": "https://www.seoulouba.co.kr/campaign/?c=435764",
+      "note": "발표일 11/20인데 21:00까지 미반영 → 11/21 09:00·21:00 재확인 중. 신청 103 / 모집 10. 28,000원 60정.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "so-pierre",
+      "name": "피에르마르콜리니 크리스마스 2종세트",
+      "brand": "피에르마르콜리니",
+      "platform": "서울오빠",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-13",
+      "announceAt": "2026-11-24",
+      "reviewStart": "2026-11-25",
+      "endAt": "2026-12-08",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://www.seoulouba.co.kr/campaign/?c=436108",
+      "note": "선정 후 취소 불가.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "ms-tee",
+      "name": "아웃도어 프로덕츠 여성 레귤러 이지웨어 반팔 티셔츠 (블랙/S)",
+      "brand": "아웃도어 프로덕츠",
+      "platform": "무신사",
+      "channel": [
+        "무신사 후기"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-24",
+      "reviewStart": "2026-11-28",
+      "endAt": "2026-12-12",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "카카오 QR 로그인. 발송 예정 11/26. 신청 후 취소·변경 불가.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "ms-shopper",
+      "name": "하이네 노마드 쇼퍼백 브라운",
+      "brand": "하이네",
+      "platform": "무신사",
+      "channel": [
+        "무신사 후기"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-26",
+      "reviewStart": "2026-12-02",
+      "endAt": "2026-12-16",
+      "visitAt": null,
+      "price": 109000,
+      "fee": 23980,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "승인 완료(제세공과금 약 23,980원). 당첨 시 본인인증 정보 제공 필요. 발송 예정 11/30.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "ms-thermal",
+      "name": "르포스 소프트히트 여성 발열 내의 상하세트 (블랙/FREE)",
+      "brand": "르포스",
+      "platform": "무신사",
+      "channel": [
+        "무신사 후기"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-26",
+      "reviewStart": "2026-12-02",
+      "endAt": "2026-12-16",
+      "visitAt": null,
+      "price": 43900,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "제세공과금 0원. 발송 예정 11/30.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "ms-boots",
+      "name": "로맨틱무브 우먼 울리 스노우 윈터 부츠 (다크블루/250)",
+      "brand": "로맨틱무브",
+      "platform": "무신사",
+      "channel": [
+        "무신사 후기"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-26",
+      "reviewStart": "2026-12-02",
+      "endAt": "2026-12-16",
+      "visitAt": null,
+      "price": 248000,
+      "fee": 54560,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "승인 완료(제세공과금 약 54,560원). 당첨 시 본인인증 정보 제공 필요. 발송 예정 11/30.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-bheat",
+      "name": "비하트 무선 보풀제거기 신제품 출시",
+      "brand": "비하트",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그",
+        "클립"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-22",
+      "reviewStart": "2026-11-23",
+      "endAt": "2026-11-30",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [
+        {
+          "t": "GIF 또는 전후사진",
+          "done": false
+        },
+        {
+          "t": "돌돌이 사용 장면",
+          "done": false
+        },
+        {
+          "t": "LCD 화면 이미지",
+          "done": false
+        },
+        {
+          "t": "지정 키워드·해시태그",
+          "done": false
+        }
+      ],
+      "url": null,
+      "note": "캠페인 ID 1018337372057123. 블로그+클립 필수.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-doasi",
+      "name": "도아시 배수구클리너",
+      "brand": "도아시",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-23",
+      "reviewStart": "2026-11-23",
+      "endAt": "2026-12-04",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-balanceon",
+      "name": "밸런스온 프리미엄 허리쿠션",
+      "brand": "밸런스온",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-24",
+      "reviewStart": "2026-11-25",
+      "endAt": "2026-12-13",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "미이행 시 상품가 청구 조항 있음.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-polarodre",
+      "name": "폴라도레 에르고 베개 1+1",
+      "brand": "폴라도레",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-24",
+      "reviewStart": "2026-12-08",
+      "endAt": "2026-12-12",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-jayeonae-date",
+      "name": "자연애 대추차",
+      "brand": "자연애",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그",
+        "클립"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-25",
+      "reviewStart": "2026-11-27",
+      "endAt": "2026-12-18",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "블로그+클립 필수.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-jayeonae-mint",
+      "name": "자연애 박하차",
+      "brand": "자연애",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그",
+        "클립"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-25",
+      "reviewStart": "2026-11-27",
+      "endAt": "2026-12-18",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "블로그+클립 필수.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-jayeonae-xmas",
+      "name": "자연애 크리스마스 목에 좋은 3종 선물",
+      "brand": "자연애",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그",
+        "클립"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-25",
+      "reviewStart": "2026-11-27",
+      "endAt": "2026-12-12",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "블로그+클립 필수. 크리스마스 3종은 제출 마감이 12/12로 빠름.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-jayeonae-night",
+      "name": "자연애 밤차",
+      "brand": "자연애",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그",
+        "클립"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-25",
+      "reviewStart": "2026-11-27",
+      "endAt": "2026-12-18",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "미발행 시 제품비·배송비 청구 조항 확인 후 신청(승인 완료).",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-witcle",
+      "name": "윗클 물걸레 청소포 30매",
+      "brand": "윗클",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-17",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 14:34 위드팝 톡톡으로 미선정 확정 통보.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "pv-towel",
+      "name": "에루 커스텀 수건 5매입",
+      "brand": "에루",
+      "platform": "파블로",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-24",
+      "reviewStart": "2026-11-24",
+      "endAt": "2026-12-04",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "접수 마감 11/23 · 아이디·닉네임 본인 계정. 선정 시 커스텀용 사진·디자인 메일 회신 필요. 리뷰 6개월 유지.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1123-1",
+      "name": "굿나잇데이브 울니트 장갑",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-23",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "카톡 선물함에서 결과 확인.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1123-2",
+      "name": "오아 전기 온열 담요",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-23",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "카톡 선물함에서 결과 확인.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1123-3",
+      "name": "릴리이브 두피 앰플",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-23",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "카톡 선물함에서 결과 확인.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1123-4",
+      "name": "산리오 헬로키티 빗고데기",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-23",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "카톡 선물함에서 결과 확인.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1123-5",
+      "name": "6년근 홍삼",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-23",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "카톡 선물함에서 결과 확인.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1123-6",
+      "name": "리락쿠마 담요",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-23",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "카톡 선물함에서 결과 확인.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1124-1",
+      "name": "무지 보카시 머플러 1+1",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-24",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1124-2",
+      "name": "스마트 체성분 체중계",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-24",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1124-3",
+      "name": "47브랜드 MLB 모자",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-24",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1124-4",
+      "name": "플로네아 올리브오일 캡슐",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-24",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1125-1",
+      "name": "캠핑포레스트 인센스 메탈 홀더 세트",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-25",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1125-2",
+      "name": "파워블로우 BLDC 헤어드라이기",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-25",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1126-1",
+      "name": "킹스베리 딸기",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-26",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1126-2",
+      "name": "손목 마사지기",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-26",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-1126-3",
+      "name": "리락쿠마 온열 장패드",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-26",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-suede-bag",
+      "name": "스웨이드 호보 빅 숄더백 (블랙)",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-27",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/18~19 응모분 중 유일하게 진행 중인 건.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-1",
+      "name": "어노브 트리트먼트",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-2",
+      "name": "비긴스 립오일",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-3",
+      "name": "베어 멜트 치크",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-4",
+      "name": "이옴 패치 마스크",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-5",
+      "name": "트윙컬 고데기",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-6",
+      "name": "단미 미니라면포트",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-7",
+      "name": "LED 얼굴마사지기",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-8",
+      "name": "제주 감귤",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-9",
+      "name": "동국제약 전동칫솔",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-10",
+      "name": "VT 마스크",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "kk-lost-11",
+      "name": "VT 헤어세럼",
+      "brand": "카카오톡 선물",
+      "platform": "카카오톡 선물",
+      "channel": [
+        "카톡 선물함"
+      ],
+      "status": "lost",
+      "appliedAt": "2026-11-18",
+      "announceAt": "2026-11-20",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/20 캡처 확인 기준 미당첨.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "gn-posh",
+      "name": "[경기 오산] 포쉬네일 홈플러스오산점",
+      "brand": "포쉬네일",
+      "platform": "강남맛집",
+      "channel": [
+        "방문",
+        "블로그"
+      ],
+      "status": "won",
+      "appliedAt": "2026-11-18",
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": "2026-12-07",
+      "visitAt": "2026-11-30T10:30",
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "서비스",
+        "amount": 0
+      },
+      "tasks": [
+        {
+          "t": "11/30 10:30 방문",
+          "done": false
+        },
+        {
+          "t": "사진 촬영",
+          "done": false
+        },
+        {
+          "t": "리뷰 등록 12/07까지",
+          "done": false
+        }
+      ],
+      "url": "https://강남맛집.net/cp/?id=2353105&guide=1",
+      "note": "예약 확정 · 담당 홍미H · 1시간 30분 소요 · 경기 오산시 청학로 238 홈플러스오산점 2층. 리뷰 URL 등록 필요.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "gn-manaus",
+      "name": "마나우스그릴",
+      "brand": "마나우스그릴",
+      "platform": "강남맛집",
+      "channel": [
+        "방문",
+        "블로그"
+      ],
+      "status": "won",
+      "appliedAt": null,
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": "2026-12-07",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "서비스",
+        "amount": 50000
+      },
+      "tasks": [],
+      "url": null,
+      "note": "자택 근처 · 5만원 체험권 · 2~3일 전 예약 필요. 리뷰 미등록.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "gn-hwangdo",
+      "name": "황도칼국수",
+      "brand": "황도칼국수",
+      "platform": "강남맛집",
+      "channel": [
+        "방문",
+        "블로그"
+      ],
+      "status": "won",
+      "appliedAt": null,
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": "2026-12-07",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "서비스",
+        "amount": 30000
+      },
+      "tasks": [],
+      "url": null,
+      "note": "자택 근처 · 3만원 체험권. 리뷰 미등록.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "gb-simgane",
+      "name": "심가네 황제능이백숙",
+      "brand": "심가네",
+      "platform": "가보자체험단",
+      "channel": [
+        "방문",
+        "블로그"
+      ],
+      "status": "won",
+      "appliedAt": null,
+      "announceAt": null,
+      "reviewStart": "2026-11-17",
+      "endAt": "2026-12-14",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "자택 근처 · 2~3일 전 예약 필요. 리뷰 미등록.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "pdf-samastea",
+      "name": "사마스티 테아닌 호지샷",
+      "brand": "사마스티",
+      "platform": "카톡 수령",
+      "channel": [
+        "블로그"
+      ],
+      "status": "won",
+      "appliedAt": null,
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [
+        {
+          "t": "10일 섭취",
+          "done": false
+        },
+        {
+          "t": "본문 1,000자 이상",
+          "done": false
+        },
+        {
+          "t": "사진 15장",
+          "done": false
+        },
+        {
+          "t": "동영상/GIF 1개",
+          "done": false
+        },
+        {
+          "t": "상세링크 samastea.com/shop_view/?idx=1",
+          "done": false
+        }
+      ],
+      "url": null,
+      "note": "리뷰 마감일 확인 대기.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "pdf-lulurun",
+      "name": "루루룬 하이드라 AZ 마스크",
+      "brand": "루루룬",
+      "platform": "카톡 수령",
+      "channel": [
+        "블로그"
+      ],
+      "status": "won",
+      "appliedAt": null,
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [
+        {
+          "t": "아젤라산 유도체·일본 No.1·돈키호테 키워드 반영",
+          "done": false
+        },
+        {
+          "t": "타사 언급·의약품 효능 표현 금지",
+          "done": false
+        }
+      ],
+      "url": null,
+      "note": "리뷰 마감일 확인 대기.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "ms-style-cardigan",
+      "name": "빅토리아 울 가디건 헤더그레이 S (스타일 후기)",
+      "brand": "빅토리아",
+      "platform": "무신사",
+      "channel": [
+        "무신사 후기"
+      ],
+      "status": "writing",
+      "appliedAt": "2026-10-18",
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": "2027-01-16",
+      "visitAt": null,
+      "price": 0,
+      "fee": 0,
+      "reward": {
+        "kind": "현금",
+        "amount": 1500
+      },
+      "tasks": [],
+      "url": null,
+      "note": "10/18 기흥점 구매분 · 최대 1,500원. 착용 사진 전달 대기.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "ms-style-jacket",
+      "name": "14W 코듀로이 미니멀 블루종 재킷 블랙 2XL (스타일 후기)",
+      "brand": "14W",
+      "platform": "무신사",
+      "channel": [
+        "무신사 후기"
+      ],
+      "status": "writing",
+      "appliedAt": "2026-10-18",
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": "2027-01-16",
+      "visitAt": null,
+      "price": 0,
+      "fee": 0,
+      "reward": {
+        "kind": "현금",
+        "amount": 1500
+      },
+      "tasks": [],
+      "url": null,
+      "note": "10/18 기흥점 구매분 · 최대 1,500원. 착용 사진 전달 대기.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "nv-malcolm-shampoo",
+      "name": "말콤 약산성 샴푸 520ml (한달사용리뷰)",
+      "brand": "말콤",
+      "platform": "네이버쇼핑",
+      "channel": [
+        "한달사용리뷰"
+      ],
+      "status": "done",
+      "appliedAt": "2026-11-19",
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": "2026-11-19",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "포인트",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "글만 등록(사진 중복 차단) · 베스트리뷰 5,000P 응모. 사진 추가 수정 대기.",
+      "paid": true,
+      "archived": false
+    },
+    {
+      "id": "nv-malcolm-body",
+      "name": "말콤 바디워시 1000ml (한달사용리뷰)",
+      "brand": "말콤",
+      "platform": "네이버쇼핑",
+      "channel": [
+        "한달사용리뷰"
+      ],
+      "status": "done",
+      "appliedAt": "2026-11-19",
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": "2026-11-19",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "포인트",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "블로그 사진 통과 등록 · 베스트리뷰 응모.",
+      "paid": true,
+      "archived": false
+    },
+    {
+      "id": "nv-apple",
+      "name": "산지온다 경북 감홍 사과 2kg (한달사용리뷰)",
+      "brand": "산지온다",
+      "platform": "네이버쇼핑",
+      "channel": [
+        "한달사용리뷰"
+      ],
+      "status": "done",
+      "appliedAt": "2026-11-19",
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": "2026-11-19",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "포인트",
+        "amount": 200
+      },
+      "tasks": [],
+      "url": null,
+      "note": "사진 3장 · +200원 즉시 지급.",
+      "paid": true,
+      "archived": false
+    },
+    {
+      "id": "nv-berry",
+      "name": "케이바이오코드 베리토닌 30정 (한달사용리뷰)",
+      "brand": "케이바이오코드",
+      "platform": "네이버쇼핑",
+      "channel": [
+        "한달사용리뷰"
+      ],
+      "status": "done",
+      "appliedAt": "2026-11-19",
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": "2026-11-19",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "포인트",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "글만 등록 · 사진 추가 수정 대기.",
+      "paid": true,
+      "archived": false
+    },
+    {
+      "id": "onb-sponge",
+      "name": "선물고팡 캐릭터 수세미",
+      "brand": "원블",
+      "platform": "원블",
+      "channel": [
+        "블로그"
+      ],
+      "status": "hold",
+      "appliedAt": "2026-11-18",
+      "announceAt": null,
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "가입(2,000P)까지 완료, 비밀번호 재확인·배송지 입력 단계에서 보류. http:// 전용 사이트(wenxiblog.com).",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-hanger",
+      "name": "더솔깃 캠핑용 접이식 행거",
+      "brand": "더솔깃",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-30",
+      "reviewStart": "2026-12-01",
+      "endAt": "2026-12-13",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019665298794469",
+      "note": "11/21 신청 완료(취소 불가) · 자택 배송지.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-bonscent",
+      "name": "본센트 대용량 디퓨저 650ml 3병 (랜덤)",
+      "brand": "본센트",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-27",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019057033853154",
+      "note": "11/21 신청 완료 · 블로그 전용.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "so-maskera",
+      "name": "마스케라 라니아 울 블렌디드 케이프 후드 워머",
+      "brand": "마스케라",
+      "platform": "서울오빠",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-23",
+      "reviewStart": "2026-11-24",
+      "endAt": "2026-12-04",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://www.seoulouba.co.kr/campaign/?c=436667",
+      "note": "상세내역에 '울 버킷햇'으로 표기 불일치 주의 · 얼굴 노출 필수.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-unpa",
+      "name": "언파 부비부비 버블 립스크럽 10ml 2개",
+      "brand": "언파",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-12-01",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019362414720929",
+      "note": "11/21 신청 완료 · 취소 불가.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "pv-toner",
+      "name": "파블로 필업 토너패드 60매",
+      "brand": "파블로",
+      "platform": "파블로",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-24",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://pavlovu.com/review_campaign.php?cp_id=1771461792",
+      "note": "상시·영업일 24시간 내 발표 · 미작성/6개월 미유지 시 비용청구 동의.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-utorex",
+      "name": "유토렉스 음파 전동칫솔",
+      "brand": "유토렉스",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "클립",
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-24",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/21 클립 전용 신청 완료.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-kong",
+      "name": "콩의두감 하수오 서리태환",
+      "brand": "콩의두감",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "클립",
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-23",
+      "reviewStart": "2026-11-24",
+      "endAt": "2026-11-27",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019300861475011/info",
+      "note": "11/21 신청 완료 · 리뷰 기간 짧음(11/24~27).",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-tilman",
+      "name": "틸만 키친컬렉션 인덕션 프라이팬 22cm",
+      "brand": "틸만",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "클립",
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-24",
+      "reviewStart": "2026-11-25",
+      "endAt": "2026-12-03",
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019315293391011/info",
+      "note": "11/21 신청 완료 · 인덕션 필수.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-heimta",
+      "name": "헤임타 마사지기+젤",
+      "brand": "헤임타",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "클립",
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-12-01",
+      "reviewStart": null,
+      "endAt": null,
+      "visitAt": null,
+      "price": null,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "11/21 신청 완료.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-purplerabbit",
+      "name": "퍼플래빗 듀얼 모니터 받침대 수납형 (블랙)",
+      "brand": "퍼플래빗",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-26",
+      "reviewStart": "2026-11-27",
+      "endAt": "2026-12-06",
+      "visitAt": null,
+      "price": 37900,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/998839099733189/info",
+      "note": "3명/37명 모집 · 37,900원 상당.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-bugsdelta",
+      "name": "벅스델타S 하수구 벌레 퇴치",
+      "brand": "벅스델타S",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-12-04",
+      "reviewStart": "2026-12-04",
+      "endAt": "2026-12-13",
+      "visitAt": null,
+      "price": 29000,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "키워드챌린지 · 1명/2명 모집.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-blueguard",
+      "name": "블루가드 좀벌레 트랩",
+      "brand": "블루가드",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-12-04",
+      "reviewStart": "2026-12-04",
+      "endAt": "2026-12-13",
+      "visitAt": null,
+      "price": 12500,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "키워드챌린지 · 1명/3명 모집.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-ecoand",
+      "name": "에코앤드 이지톡톡 텀블러 세척제 (30정)",
+      "brand": "에코앤드",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-12-03",
+      "reviewStart": "2026-12-04",
+      "endAt": "2026-12-22",
+      "visitAt": null,
+      "price": 17900,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": null,
+      "note": "10명/74명 · 2차 활용 1년 동의.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-trinia",
+      "name": "트리니아 앉은뱅이 의자 (우레탄바퀴)",
+      "brand": "트리니아",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "클립",
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-24",
+      "reviewStart": "2026-11-30",
+      "endAt": "2026-12-14",
+      "visitAt": null,
+      "price": 24000,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/998827610952325/info",
+      "note": "5명/61명 · 클립+블로그 2건 필수.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-formydaughter-mist",
+      "name": "포마이도터 피부 수분 밸런스 미스트",
+      "brand": "포마이도터",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-26",
+      "reviewStart": "2026-11-27",
+      "endAt": "2026-12-10",
+      "visitAt": null,
+      "price": 15900,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019325858134464",
+      "note": "20명/36명 · 사진 7장+분사 GIF.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-kalif",
+      "name": "대구 건강빵 칼리프 4종 (사워도우·치아바타·포카치아)",
+      "brand": "칼리프",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-12-04",
+      "reviewStart": "2026-12-07",
+      "endAt": "2026-12-21",
+      "visitAt": null,
+      "price": 23600,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019309578086855",
+      "note": "20명/86명 · 원본 사진·영상 이메일 전송 필수.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-gambas",
+      "name": "⭐야식대첩⭐ 감바스 알 아히요",
+      "brand": "야식대첩",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그",
+        "클립"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-23",
+      "reviewStart": "2026-11-25",
+      "endAt": "2026-12-13",
+      "visitAt": null,
+      "price": 15400,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019378463697283",
+      "note": "10명/28명 · 12개월 공개 · 원본 사진 logan@onemakers.net 전송.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-formydaughter-sun",
+      "name": "포마이도터 유브이 퍼펙트 톤업 선스크린",
+      "brand": "포마이도터",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-26",
+      "reviewStart": "2026-11-27",
+      "endAt": "2026-12-10",
+      "visitAt": null,
+      "price": 18900,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019326533928866",
+      "note": "10명/27명 · 사진 10장 이상.",
+      "paid": false,
+      "archived": false
+    },
+    {
+      "id": "bc-bodycare",
+      "name": "바디케어_체험단 (퍼퓸 바디워시+바디로션)",
+      "brand": "바디케어",
+      "platform": "브랜드커넥트",
+      "channel": [
+        "블로그"
+      ],
+      "status": "applied",
+      "appliedAt": "2026-11-21",
+      "announceAt": "2026-11-30",
+      "reviewStart": "2026-12-04",
+      "endAt": "2026-12-18",
+      "visitAt": null,
+      "price": 19000,
+      "fee": 0,
+      "reward": {
+        "kind": "제품",
+        "amount": 0
+      },
+      "tasks": [],
+      "url": "https://brandconnect.naver.com/876981454477152/campaign/1019334618413152",
+      "note": "20명/71명 · 사진 6컷+영상 1개.",
+      "paid": false,
+      "archived": false
+    }
+  ]
+};
+const KEY = 'chae-trial-note-v2';
+
+const STATUS = {
+  applied:{label:'발표 대기'}, won:{label:'선정'}, writing:{label:'작성 중'},
+  submitted:{label:'제출 완료'}, done:{label:'완료'}, lost:{label:'미선정'}, hold:{label:'보류'}
+};
+const stLabel = k => (STATUS[k] && STATUS[k].label) || k;
+const REWARD = ['제품','현금','포인트','서비스'];
+const ACTIVE = ['applied','won','writing','submitted'];
+
+/* ───────── dates ───────── */
+const pad = n => String(n).padStart(2,'0');
+const ymd = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const todayStr = () => ymd(new Date());
+function parseD(s){ if(!s) return null; const p = s.slice(0,10).split('-').map(Number);
+  if(p.length<3 || !p[0]) return null; return new Date(p[0], p[1]-1, p[2]); }
+function diffDays(s){ const d = parseD(s); if(!d) return null;
+  return Math.round((d - parseD(todayStr()))/86400000); }
+function md(s){ const d = parseD(s); return d ? (d.getMonth()+1)+'/'+d.getDate() : ''; }
+function mdw(s){ const d = parseD(s); if(!d) return '';
+  return md(s)+'('+'일월화수목금토'[d.getDay()]+')'; }
+function clock(s){ return s && s.length>10 ? s.slice(11,16) : ''; }
+function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+function ddayLabel(s){
+  const n = diffDays(s); if(n === null) return '';
+  if(n === 0) return 'D-DAY'; if(n > 0) return 'D-'+n; return 'D+'+(-n);
+}
+function ddayClass(s){ const n = diffDays(s); if(n===null) return '';
+  if(n <= 0) return n===0 ? 'now' : 'over';
+  if(n <= 3) return 'soon'; return ''; }
+
+let DB = loadDB();
+const state = {view:'home', q:'', chip:'active', platform:'all', sort:'end',
+  calMonth:startOfMonth(new Date()), calDay:todayStr(), editingId:null, buf:null};
+
+/* ───────── storage ───────── */
+function loadDB(){
+  try{ const raw = localStorage.getItem(KEY); if(raw){ const d = JSON.parse(raw); if(d && Array.isArray(d.campaigns)) return d; } }
+  catch(e){ console.warn('load failed', e); }
+  return JSON.parse(JSON.stringify(SEED));
+}
+function saveDB(){
+  DB.updatedAt = new Date().toISOString();
+  try{ localStorage.setItem(KEY, JSON.stringify(DB)); }
+  catch(e){ toast('저장 공간이 부족해요'); }
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('on'), 1700);
+}
+
+/* ───────── selectors / stats ───────── */
+const byId = id => DB.campaigns.find(c => c.id === id);
+const activeOnes = () => DB.campaigns.filter(c => ACTIVE.includes(c.status));
+
+function needsResult(){
+  const t = todayStr();
+  return DB.campaigns.filter(c => c.status==='applied' && c.announceAt && c.announceAt.slice(0,10) <= t);
+}
+function dueSoon(days){
+  return activeOnes().filter(c => {
+    if(c.status === 'applied') return false;
+    const n = diffDays(c.endAt);
+    return n !== null && n >= 0 && n <= days;
+  }).sort((a,b)=> (a.endAt||'').localeCompare(b.endAt||''));
+}
+function overdue(){
+  return activeOnes().filter(c => {
+    if(c.status === 'applied') return false;
+    const n = diffDays(c.endAt); return n !== null && n < 0;
+  });
+}
+function todayEvents(){
+  const t = todayStr();
+  return DB.campaigns.filter(c => (c.visitAt||'').slice(0,10)===t);
+}
+function weekEvents(){
+  return DB.campaigns.filter(c => {
+    const t = todayStr();
+    return ['announceAt','endAt','visitAt'].some(k => {
+      const n = diffDays(c[k]); return n !== null && n >= 1 && n <= 7;
+    }) && !['lost','done'].includes(c.status);
+  });
+}
+function taskProgress(c){
+  const t = c.tasks || []; if(!t.length) return null;
+  return { done: t.filter(x=>x.done).length, total: t.length };
+}
+function moneySums(){
+  let cashExpected = 0, pointExpected = 0, goods = 0, feeConfirmed = 0, feeExpected = 0;
+  DB.campaigns.forEach(c => {
+    const amt = (c.reward && c.reward.amount) || 0;
+    if(!c.paid && !['lost','done'].includes(c.status)){
+      if(c.reward && c.reward.kind === '현금') cashExpected += amt;
+      if(c.reward && c.reward.kind === '포인트') pointExpected += amt;
+    }
+    if(['won','writing','submitted','done'].includes(c.status) && c.price) goods += c.price;
+    if(['won','writing','submitted'].includes(c.status)) feeConfirmed += (c.fee||0);
+    if(c.status === 'applied') feeExpected += (c.fee||0);
+  });
+  return {cashExpected, pointExpected, goods, feeConfirmed, feeExpected};
+}
+const won = n => (n||0).toLocaleString('ko-KR');
+
+/* ───────── filtering ───────── */
+function filtered(){
+  let out = DB.campaigns.slice();
+  if(state.chip === 'active') out = out.filter(c => ACTIVE.includes(c.status) || c.status==='hold');
+  else if(state.chip !== 'all') out = out.filter(c => c.status === state.chip);
+  if(state.platform !== 'all') out = out.filter(c => c.platform === state.platform);
+  const q = state.q.trim().toLowerCase();
+  if(q) out = out.filter(c => (c.name+' '+(c.brand||'')+' '+(c.note||'')).toLowerCase().includes(q));
+  const key = state.sort;
+  out.sort((a,b)=>{
+    if(key==='end') return (a.endAt||'9999').localeCompare(b.endAt||'9999');
+    if(key==='announce') return (a.announceAt||'9999').localeCompare(b.announceAt||'9999');
+    if(key==='name') return a.name.localeCompare(b.name,'ko');
+    return (b.appliedAt||'').localeCompare(a.appliedAt||'');
+  });
+  return out;
+}
+
+/* ───────── render: card ───────── */
+function cardHTML(c){
+  const p = taskProgress(c);
+  let dateLine = '';
+  if(c.status === 'applied'){
+    dateLine = c.announceAt ? `발표 ${mdw(c.announceAt)}` : '발표일 미정';
+    if(c.endAt) dateLine += ` · 리뷰 ~${md(c.endAt)}`;
+  }else if(c.status === 'lost'){
+    dateLine = c.announceAt ? `결과 ${md(c.announceAt)}` : '결과 확인';
+  }else if(c.status === 'done'){
+    dateLine = c.endAt ? `${md(c.endAt)} 완료` : '완료';
+  }else{
+    if(c.visitAt) dateLine = `방문 ${mdw(c.visitAt)} ${clock(c.visitAt)}`;
+    else if(c.reviewStart) dateLine = `리뷰 ${md(c.reviewStart)}~${md(c.endAt)}`;
+    else if(c.endAt) dateLine = `마감 ${mdw(c.endAt)}`;
+  }
+  const ddTarget = c.status==='applied' ? c.announceAt : (c.status==='done'||c.status==='lost' ? null : c.endAt);
+  const dd = ddTarget ? `<span class="dday ${ddayClass(ddTarget)}">${ddayLabel(ddTarget)}</span>` : '';
+  const fee = (c.status==='applied' && c.fee) ? `<div class="fee">당청 시 제세공과금 ${won(c.fee)}원</div>` : '';
+  const prog = p ? `<div class="prog"><i style="width:${Math.round(p.done/p.total*100)}%"></i></div>` : '';
+  const note = c.note ? `<div class="note">${esc(c.note)}</div>` : '';
+  return `<article class="card" data-action="open" data-id="${c.id}">
+    <div class="ct"><span class="plat">${esc(c.platform)}</span>
+      <span class="st st-${c.status}">${stLabel(c.status)}</span>${dd}</div>
+    <div class="nm">${esc(c.name)}</div>
+    <div class="meta">${dateLine}${p?` · 체크 ${p.done}/${p.total}`:''}</div>
+    ${fee}${prog}${note}
+  </article>`;
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+/* ───────── views ───────── */
+function render(){
+  document.querySelectorAll('#nav button').forEach(b =>
+    b.classList.toggle('on', b.dataset.view === state.view));
+  const v = document.getElementById('view');
+  const titles = {home:'체험단 노트', list:'전체 목록', cal:'캘린더', money:'정산', set:'설정'};
+  document.getElementById('hdrTitle').textContent = titles[state.view];
+  document.getElementById('hdrCount').textContent =
+    `진행 ${activeOnes().length} · 전체 ${DB.campaigns.length}`;
+  document.getElementById('fab').style.display = (state.view==='home'||state.view==='list') ? '' : 'none';
+  if(state.view === 'home') v.innerHTML = homeHTML();
+  else if(state.view === 'list') v.innerHTML = listHTML();
+  else if(state.view === 'cal') v.innerHTML = calHTML();
+  else if(state.view === 'money') v.innerHTML = moneyHTML();
+  else v.innerHTML = setHTML();
+  if(state._lastView !== state.view){ window.scrollTo({top:0}); state._lastView = state.view; }
+}
+
+function refreshList(){
+  const g = document.getElementById('listGrid'); if(!g) return;
+  const items = filtered();
+  g.innerHTML = items.length ? items.map(cardHTML).join('') : '<div class="empty">조건에 맞는 체험단이 없어요.</div>';
+  const c = document.getElementById('listCount'); if(c) c.textContent = items.length + '건';
+}
+
+function homeHTML(){
+  const nr = needsResult(), ds = dueSoon(3), ov = overdue(), te = todayEvents();
+  const wc = activeOnes().length;
+  const s = moneySums();
+  const today = parseD(todayStr());
+  const head = `${today.getMonth()+1}월 ${today.getDate()}일 ${'일월화수목금토'[today.getDay()]}요일`;
+
+  let h = `<div class="stats">
+    <div class="stat"><div class="k">진행 중</div><div class="v">${wc}<small>건</small></div><div class="d">발표 대기 ${DB.campaigns.filter(c=>c.status==='applied').length}건 포함</div></div>
+    <div class="stat"><div class="k">마감 임박 (D-3)</div><div class="v">${ds.length}<small>건</small></div><div class="d">${ov.length? '지난 마감 '+ov.length+'건': '지난 마감 없음'}</div></div>
+    <div class="stat acc"><div class="k">받을 돈 (예정)</div><div class="v">${won(s.cashExpected + s.pointExpected)}<small>원</small></div><div class="d">현금 ${won(s.cashExpected)} · 포인트 ${won(s.pointExpected)}</div></div>
+    <div class="stat"><div class="k">제세공과금 (확정)</div><div class="v">${won(s.feeConfirmed)}<small>원</small></div><div class="d">예상 ${won(s.feeExpected)}원 더</div></div>
+  </div>`;
+
+  h += `<div class="sec"><div class="sec-h"><h2>${head} 할 일</h2><span class="sub">${te.length + nr.length + ds.length ? '아래부터 확인' : '오늘은 여유'}</span></div>`;
+
+  if(te.length){
+    h += te.map(c => `<article class="card" data-action="open" data-id="${c.id}">
+      <div class="ct"><span class="plat">${esc(c.platform)}</span><span class="st st-won">오늘 방문</span>
+      <span class="dday now">${clock(c.visitAt)||'오늘'}</span></div>
+      <div class="nm">${esc(c.name)}</div>
+      <div class="meta">${c.note ? esc(c.note).slice(0,80) : '방문 일정'}</div></article>`).join('');
+  }
+  if(nr.length){
+    h += `<div class="sec-h" style="margin-top:14px"><h2>결과 확인 필요</h2><span class="sub">발표일이 지났어요</span></div>`;
+    h += nr.map(c => cardHTML(c) + `<div style="display:flex;gap:6px;margin:-4px 0 2px 4px">
+      <button class="chip" data-action="quick" data-id="${c.id}" data-st="won">선정됐어요</button>
+      <button class="chip" data-action="quick" data-id="${c.id}" data-st="lost">미선정</button></div>`).join('');
+  }
+  if(ds.length){
+    h += `<div class="sec-h" style="margin-top:14px"><h2>마감 임박</h2><span class="sub">3일 안에 끝내야 해요</span></div>`;
+    h += ds.map(cardHTML).join('');
+  }
+  if(!te.length && !nr.length && !ds.length){
+    h += `<div class="empty">오늘 바로 할 일은 없어요.<br>발표 대기 ${DB.campaigns.filter(c=>c.status==='applied').length}건의 결과를 기다리는 중이에요 🙌</div>`;
+  }
+  h += `</div>`;
+
+  const wk = weekEvents();
+  if(wk.length){
+    h += `<div class="sec"><div class="sec-h"><h2>이번 주 일정</h2><span class="sub">${wk.length}건</span></div>
+      ${wk.slice(0,6).map(cardHTML).join('')}
+      ${wk.length>6?`<div class="hint" style="text-align:center;margin-top:6px">외 ${wk.length-6}건은 목록·캘린더에서 볼 수 있어요</div>`:''}</div>`;
+  }
+
+  const next = activeOnes().filter(c => c.status!=='applied' || c.announceAt)
+    .sort((a,b)=> (a.endAt||'9999').localeCompare(b.endAt||'9999')).slice(0,4);
+  if(next.length){
+    h += `<div class="sec"><div class="sec-h"><h2>마감 빠른 순</h2>
+      <span class="sub" data-action="view" data-view="list" style="cursor:pointer">전체 보기 →</span></div>
+      ${next.map(cardHTML).join('')}</div>`;
+  }
+  return h;
+}
+
+function listHTML(){
+  const items = filtered();
+  const chips = [['active','진행 중'],['applied','발표 대기'],['won','선정'],['writing','작성 중'],
+    ['submitted','제출 완료'],['done','완료'],['lost','미선정'],['hold','보류'],['all','전체']];
+  const plats = ['all', ...Array.from(new Set(DB.campaigns.map(c=>c.platform)))];
+  return `<div class="toolbar">
+    <div class="search"><span>🔍</span><input id="q" placeholder="상품명·브랜드·메모 검색" value="${esc(state.q)}"></div>
+    <div class="chips">${chips.map(([k,l]) =>
+      `<button class="chip ${state.chip===k?'on':''}" data-action="chip" data-k="${k}">${l}</button>`).join('')}</div>
+    <div class="selrow">
+      <select data-action="platform">
+        ${plats.map(p=>`<option value="${esc(p)}" ${state.platform===p?'selected':''}>${p==='all'?'플랫폼 전체':esc(p)}</option>`).join('')}
+      </select>
+      <select data-action="sort">
+        <option value="end" ${state.sort==='end'?'selected':''}>마감 임박순</option>
+        <option value="announce" ${state.sort==='announce'?'selected':''}>발표 임박순</option>
+        <option value="recent" ${state.sort==='recent'?'selected':''}>최근 신청순</option>
+        <option value="name" ${state.sort==='name'?'selected':''}>이름순</option>
+      </select>
+    </div>
+  </div>
+  <div class="sec"><div class="sec-h"><h2 id="listCount">${items.length}건</h2>
+    <span class="sub">${STATE_LABEL(state.chip)}</span></div>
+    <div class="grid" id="listGrid">${items.length ? items.map(cardHTML).join('') : '<div class="empty">조건에 맞는 체험단이 없어요.</div>'}</div>
+  </div>`;
+}
+function STATE_LABEL(k){
+  if(k==='active') return '진행 중만';
+  if(k==='all') return '전체 보기';
+  return stLabel(k) || k;
+}
+
+function calHTML(){
+  const m = state.calMonth;
+  const first = new Date(m.getFullYear(), m.getMonth(), 1);
+  const days = new Date(m.getFullYear(), m.getMonth()+1, 0).getDate();
+  const marks = {};
+  DB.campaigns.forEach(c => {
+    const push = (k,t) => { if(!c[k]) return; const d = c[k].slice(0,10);
+      (marks[d] = marks[d] || {}); marks[d][t] = 1; };
+    push('announceAt','a'); push('endAt','e'); push('visitAt','v');
+  });
+  let cells = '';
+  for(let i=0;i<first.getDay();i++) cells += '<button class="day blank"></button>';
+  for(let d=1;d<=days;d++){
+    const ds = `${m.getFullYear()}-${pad(m.getMonth()+1)}-${pad(d)}`;
+    const mk = marks[ds] || {};
+    const dt = parseD(ds);
+    const cls = ['day'];
+    if(ds === todayStr()) cls.push('today');
+    if(ds === state.calDay) cls.push('sel');
+    if(dt.getDay() === 0) cls.push('sun');
+    cells += `<button class="${cls.join(' ')}" data-action="calday" data-d="${ds}">
+      <span class="n">${d}</span>
+      <span class="dots">${mk.a?'<i class="dot a"></i>':''}${mk.e?'<i class="dot e"></i>':''}${mk.v?'<i class="dot v"></i>':''}</span>
+    </button>`;
+  }
+  const dayItems = DB.campaigns.filter(c => ['announceAt','endAt','visitAt'].some(k => (c[k]||'').slice(0,10) === state.calDay));
+  return `<div class="cal">
+    <div class="cal-h">
+      <button data-action="calprev">‹</button>
+      <b>${m.getFullYear()}년 ${m.getMonth()+1}월</b>
+      <button data-action="calnext">›</button>
+    </div>
+    <div class="cal-dow"><span class="sun">일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+    <div class="cal-grid">${cells}</div>
+  </div>
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-h"><h2>${mdw(state.calDay)}</h2><span class="sub">${dayItems.length}건</span></div>
+    <div class="daylist">${dayItems.length ? dayItems.map(cardHTML).join('') : '<div class="empty">이 날은 일정이 없어요.</div>'}</div>
+  </div>
+  <div class="sec"><div class="sec-h"><h2>표시</h2><span class="sub">점 색깔</span></div>
+    <div class="mrow" style="gap:16px;font-size:12px;color:var(--ink2);font-weight:600">
+      <span style="display:flex;align-items:center;gap:6px"><i class="dot a"></i>발표일</span>
+      <span style="display:flex;align-items:center;gap:6px"><i class="dot e"></i>리뷰 마감</span>
+      <span style="display:flex;align-items:center;gap:6px"><i class="dot v"></i>방문</span>
+    </div>
+  </div>`;
+}
+
+function moneyHTML(){
+  const s = moneySums();
+  const cash = DB.campaigns.filter(c => c.reward && c.reward.kind==='현금' && c.reward.amount);
+  const point = DB.campaigns.filter(c => c.reward && c.reward.kind==='포인트' && c.reward.amount);
+  const fees = DB.campaigns.filter(c => c.fee);
+  const goods = DB.campaigns.filter(c => c.price && ['won','writing','submitted','done'].includes(c.status));
+  const row = (c, kind) => {
+    const amt = kind==='fee' ? c.fee : (kind==='goods' ? c.price : ((c.reward&&c.reward.amount)||0));
+    const plus = kind==='fee' ? '' : 'plus';
+    return `<div class="mrow">
+      <div class="nm">${esc(c.name)}<small>${esc(c.platform)} · ${stLabel(c.status)}${c.endAt?' · '+md(c.endAt):''}</small></div>
+      <span class="amt ${kind==='fee'?'minus':plus}">${won(amt)}원</span>
+      ${kind!=='fee' && kind!=='goods' ? `<button class="pay ${c.paid?'on':''}" data-action="paid" data-id="${c.id}">${c.paid?'받음':'대기'}</button>`:''}
+    </div>`;
+  };
+  return `<div class="stats">
+    <div class="stat acc"><div class="k">현금 (예정)</div><div class="v">${won(s.cashExpected)}<small>원</small></div><div class="d">받으면 '받음' 체크</div></div>
+    <div class="stat acc"><div class="k">포인트 (예정)</div><div class="v">${won(s.pointExpected)}<small>원</small></div><div class="d">네이버페이 등</div></div>
+    <div class="stat"><div class="k">받은 제품가</div><div class="v">${won(s.goods)}<small>원</small></div><div class="d">정가 합계</div></div>
+    <div class="stat"><div class="k">제세공과금</div><div class="v">${won(s.feeConfirmed)}<small>원</small></div><div class="d">확정 기준</div></div>
+  </div>
+  <div class="sec"><div class="sec-h"><h2>정산 현금</h2><span class="sub">${cash.length}건</span></div>
+    ${cash.length? cash.map(c=>row(c,'cash')).join('') : '<div class="empty">현금 정산 건이 없어요.</div>'}</div>
+  <div class="sec"><div class="sec-h"><h2>포인트</h2><span class="sub">${point.length}건</span></div>
+    ${point.length? point.map(c=>row(c,'point')).join('') : '<div class="empty">포인트 정산 건이 없어요.</div>'}</div>
+  <div class="sec"><div class="sec-h"><h2>받은 제품 (정가)</h2><span class="sub">${goods.length}건</span></div>
+    ${goods.length? goods.map(c=>row(c,'goods')).join('') : '<div class="empty">제품 수령 건이 없어요.</div>'}</div>
+  <div class="sec"><div class="sec-h"><h2>제세공과금 (내가 낼 돈)</h2><span class="sub">${fees.length}건 · 예상 ${won(s.feeExpected)}원 포함</span></div>
+    ${fees.length? fees.map(c=>row(c,'fee')).join('') : '<div class="empty">제세공과금 건이 없어요.</div>'}</div>
+  <details class="help"><summary>제세공과금은 왜 나가나요?</summary>
+    <p>체험단으로 물건을 받으면 기타소득으로 잡혀 정가의 22%를 다음 달에 냅니다. 위 금액은 공지 기준 예상치이고, 실제 고지서가 오면 '설정'에서 직접 고칠 수 있어요.</p></details>`;
+}
+
+function setHTML(){
+  const bytes = new Blob([JSON.stringify(DB)]).size;
+  return `<div class="sec"><div class="sec-h"><h2>데이터</h2><span class="sub">${won(bytes)} B · ${DB.campaigns.length}건</span></div>
+    <div class="mrow"><div class="nm">JSON 내보내기<small>백업·PC에서 편집용</small></div>
+      <button class="btn" data-action="export">내보내기</button></div>
+    <div class="mrow" style="margin-top:8px"><div class="nm">JSON 가져오기<small>내보낸 파일로 복원</small></div>
+      <button class="btn" data-action="import">가져오기</button></div>
+    <input type="file" id="file" accept="application/json,.json" style="display:none">
+    <div class="mrow" style="margin-top:8px"><div class="nm">초기 데이터로 되돌리기<small>지금까지 고친 내용이 사라져요</small></div>
+      <button class="btn danger" data-action="reset">되돌리기</button></div>
+  </div>
+  <div class="sec"><div class="sec-h"><h2>플랫폼 계정</h2><span class="sub">로그인 수단</span></div>
+    ${DB.accounts.map(a=>`<div class="mrow"><div class="nm">${esc(a.platform)}<small>${esc(a.login)}${a.nick?' · '+esc(a.nick):''}</small></div>
+      ${a.url&&a.url.startsWith('http')?`<a class="btn" href="${esc(a.url)}" target="_blank" rel="noopener" style="text-decoration:none">열기</a>`:''}</div>`).join('')}
+  </div>
+  <div class="sec"><div class="sec-h"><h2>이 앱은</h2></div>
+    <details class="help" open><summary>어떻게 저장되나요?</summary>
+      <p>모든 내용은 이 브라우저의 localStorage에만 저장돼요. 서버로 보내지 않으니 다른 기기·브라우저에서는 보이지 않습니다. 기기를 바꾸기 전에는 'JSON 내보내기'로 백업해 주세요.</p></details>
+    <details class="help"><summary>상태는 어떻게 바뀌나요?</summary>
+      <p>발표 대기 → (발표일 지나면 홈에 '결과 확인 필요'로 올라옴) → 선정/미선정. 선정이면 작성 중 → 제출 완료 → 완료로 바꿔 주세요. 카드를 눌러 상태를 고를 수 있어요.</p></details>
+  </div>`;
+}
+
+/* ───────── sheet ───────── */
+function openSheet(){
+  document.getElementById('scrim').classList.add('on');
+  const s = document.getElementById('sheet');
+  s.classList.add('on'); s.setAttribute('aria-hidden','false');
+}
+function closeSheet(){
+  document.getElementById('scrim').classList.remove('on');
+  const s = document.getElementById('sheet');
+  s.classList.remove('on'); s.setAttribute('aria-hidden','true');
+  state.editingId = null; state.buf = null;
+}
+function newItem(){
+  return {id:'c-'+Date.now(), name:'', brand:'', platform:'브랜드커넥트', channel:['블로그'],
+    status:'applied', appliedAt:todayStr(), announceAt:'', reviewStart:'', endAt:'', visitAt:'',
+    price:null, fee:0, reward:{kind:'제품',amount:0}, tasks:[], url:'', note:'', paid:false};
+}
+function openDetail(id){
+  const c = byId(id); if(!c) return;
+  state.editingId = id;
+  state.buf = JSON.parse(JSON.stringify(c));
+  renderSheet();
+  openSheet();
+}
+function openNew(){
+  state.buf = newItem(); state.editingId = 'new';
+  renderSheet(); openSheet();
+}
+function renderSheet(){
+  const b = state.buf; if(!b) return;
+  const isNew = state.editingId === 'new';
+  const plats = Array.from(new Set([...DB.campaigns.map(c=>c.platform), '서울오빠','무신사','브랜드커넥트','파블로','카카오톡 선물','강남맛집','가보자체험단','카톡 수령','네이버쇼핑','원블','기타']));
+  const chans = ['블로그','클립','인스타','무신사 후기','한달사용리뷰','방문','카톡 선물함'];
+  const el = document.getElementById('sheet');
+  el.innerHTML = `<div class="sh-top">
+      <h3>${isNew?'체험단 추가':esc(b.name||'상세')}</h3>
+      <button class="btn ghost" data-action="closeSheet" style="padding:6px 10px">닫기</button>
+    </div>
+    <div class="body">
+      <div class="fld"><label>상품명</label><input data-f="name" value="${esc(b.name)}" placeholder="예: 쿤달 샴푸 세트"></div>
+      <div class="fld two">
+        <div><label>브랜드</label><input data-f="brand" value="${esc(b.brand||'')}"></div>
+        <div><label>플랫폼</label>
+          <select data-f="platform">${plats.map(p=>`<option ${b.platform===p?'selected':''}>${esc(p)}</option>`).join('')}</select>
+        </div>
+      </div>
+      <div class="fld"><label>채널</label>
+        <div class="chips">${chans.map(ch=>`<button class="chip ${(b.channel||[]).includes(ch)?'on':''}" data-action="chan" data-ch="${esc(ch)}">${esc(ch)}</button>`).join('')}</div>
+      </div>
+      <div class="fld"><label>상태</label>
+        <select data-f="status">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}" ${b.status===k?'selected':''}>${v.label}</option>`).join('')}</select>
+      </div>
+      <div class="fld two">
+        <div><label>신청일</label><input type="date" data-f="appliedAt" value="${b.appliedAt||''}"></div>
+        <div><label>발표일</label><input type="date" data-f="announceAt" value="${b.announceAt||''}"></div>
+      </div>
+      <div class="fld two">
+        <div><label>리뷰 시작</label><input type="date" data-f="reviewStart" value="${b.reviewStart||''}"></div>
+        <div><label>리뷰 마감</label><input type="date" data-f="endAt" value="${b.endAt||''}"></div>
+      </div>
+      <div class="fld"><label>방문 일시 (맛집·체험형)</label><input type="datetime-local" data-f="visitAt" value="${(b.visitAt||'').slice(0,16)}"></div>
+      <div class="fld two">
+        <div><label>정가 (원)</label><input type="number" inputmode="numeric" data-f="price" value="${b.price==null?'':b.price}"></div>
+        <div><label>제세공과금 (원)</label><input type="number" inputmode="numeric" data-f="fee" value="${b.fee==null?0:b.fee}"></div>
+      </div>
+      <div class="fld two">
+        <div><label>정산 종류</label>
+          <select data-f="reward.kind">${REWARD.map(r=>`<option ${(b.reward&&b.reward.kind)===r?'selected':''}>${r}</option>`).join('')}</select></div>
+        <div><label>정산 금액 (원)</label><input type="number" inputmode="numeric" data-f="reward.amount" value="${(b.reward&&b.reward.amount)==null?0:b.reward.amount}"></div>
+      </div>
+      <div class="fld"><label>링크</label><input data-f="url" value="${esc(b.url||'')}" placeholder="캠페인 주소"></div>
+      <div class="fld"><label>메모</label><textarea data-f="note" placeholder="담당자·계정·조건 등">${esc(b.note||'')}</textarea></div>
+      <div class="fld"><label>필수 체크</label>
+        <div id="tasks">${(b.tasks||[]).map((t,i)=>`<div class="tline ${t.done?'done':''}">
+          <input type="checkbox" data-action="task" data-i="${i}" ${t.done?'checked':''}>
+          <span>${esc(t.t)}</span>
+          <button class="x" data-action="taskdel" data-i="${i}">✕</button></div>`).join('') || '<div class="hint">아직 체크 항목이 없어요.</div>'}
+        </div>
+        <div class="tadd"><input id="newtask" placeholder="예: 사진 10장"><button class="btn" data-action="taskadd">추가</button></div>
+      </div>
+    </div>
+    <div class="foot">
+      ${isNew?'':`<button class="btn danger" data-action="del" data-id="${b.id}">삭제</button>`}
+      <button class="btn primary" data-action="save">저장</button>
+    </div>`;
+}
+
+/* ───────── actions ───────── */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]'); if(!el) return;
+  const a = el.dataset.action;
+  if(a === 'view'){ state.view = el.dataset.view; render(); }
+  else if(a === 'open'){ openDetail(el.dataset.id); }
+  else if(a === 'new'){ openNew(); }
+  else if(a === 'closeSheet'){ closeSheet(); }
+  else if(a === 'chip'){ state.chip = el.dataset.k; render(); }
+  else if(a === 'calday'){ state.calDay = el.dataset.d; render(); }
+  else if(a === 'calprev'){ state.calMonth = new Date(state.calMonth.getFullYear(), state.calMonth.getMonth()-1, 1);
+    state.calDay = ymd(state.calMonth); render(); }
+  else if(a === 'calnext'){ state.calMonth = new Date(state.calMonth.getFullYear(), state.calMonth.getMonth()+1, 1);
+    state.calDay = ymd(state.calMonth); render(); }
+  else if(a === 'chan'){
+    const ch = el.dataset.ch, arr = state.buf.channel || (state.buf.channel = []);
+    const i = arr.indexOf(ch); i >= 0 ? arr.splice(i,1) : arr.push(ch);
+    renderSheet();
+  }
+  else if(a === 'task'){
+    const i = +el.dataset.i; state.buf.tasks[i].done = !state.buf.tasks[i].done;
+    renderSheet();
+  }
+  else if(a === 'taskdel'){ state.buf.tasks.splice(+el.dataset.i,1); renderSheet(); }
+  else if(a === 'taskadd'){
+    const inp = document.getElementById('newtask'); const v = inp.value.trim();
+    if(!v) return; (state.buf.tasks = state.buf.tasks||[]).push({t:v,done:false}); renderSheet();
+  }
+  else if(a === 'save'){
+    const b = state.buf;
+    if(!b.name.trim()){ toast('상품명을 넣어 주세요'); return; }
+    b.price = b.price === '' ? null : Number(b.price) || null;
+    b.fee = Number(b.fee) || 0;
+    b.reward = b.reward || {kind:'제품', amount:0};
+    b.reward.amount = Number(b.reward.amount) || 0;
+    if(state.editingId === 'new'){
+      DB.campaigns.unshift(b);
+      toast('추가했어요');
+    }else{
+      const i = DB.campaigns.findIndex(c => c.id === b.id);
+      if(i >= 0) DB.campaigns[i] = b; else DB.campaigns.unshift(b);
+      toast('저장했어요');
+    }
+    saveDB(); closeSheet(); render();
+  }
+  else if(a === 'del'){
+    if(!confirm('이 체험단을 지울까요? 되돌릴 수 없어요.')) return;
+    DB.campaigns = DB.campaigns.filter(c => c.id !== el.dataset.id);
+    saveDB(); closeSheet(); render(); toast('지웠어요');
+  }
+  else if(a === 'quick'){
+    const c = byId(el.dataset.id); if(!c) return;
+    c.status = el.dataset.st; saveDB(); render();
+    toast(el.dataset.st === 'won' ? '선정으로 바꿨어요' : '미선정으로 정리했어요');
+  }
+  else if(a === 'paid'){
+    const c = byId(el.dataset.id); if(!c) return;
+    c.paid = !c.paid; saveDB(); render(); toast(c.paid?'받은 걸로 표시했어요':'대기로 되돌렸어요');
+  }
+  else if(a === 'export'){
+    const blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url; link.download = `체험단노트_${todayStr()}.json`;
+    link.click(); URL.revokeObjectURL(url); toast('내보냈어요');
+  }
+  else if(a === 'import'){ document.getElementById('file').click(); }
+  else if(a === 'reset'){
+    if(!confirm('처음 데이터로 되돌릴까요? 지금까지 고친 내용이 사라져요.')) return;
+    DB = JSON.parse(JSON.stringify(SEED)); saveDB(); render(); toast('되돌렸어요');
+  }
+});
+
+document.addEventListener('input', e => {
+  const f = e.target.dataset && e.target.dataset.f;
+  if(f && state.buf){
+    if(f === 'reward.kind' || f === 'reward.amount'){
+      state.buf.reward = state.buf.reward || {kind:'제품', amount:0};
+      state.buf.reward[f.split('.')[1]] = e.target.value;
+    }else{
+      state.buf[f] = e.target.value;
+    }
+  }
+  if(e.target.id === 'q'){ state.q = e.target.value; refreshList(); }
+});
+document.addEventListener('change', e => {
+  const a = e.target.dataset && e.target.dataset.action;
+  if(a === 'platform'){ state.platform = e.target.value; refreshList(); }
+  if(a === 'sort'){ state.sort = e.target.value; refreshList(); }
+  if(e.target.id === 'file'){
+    const file = e.target.files[0]; if(!file) return;
+    const fr = new FileReader();
+    fr.onload = () => {
+      try{
+        const d = JSON.parse(fr.result);
+        if(!d || !Array.isArray(d.campaigns)) throw new Error('형식이 달라요');
+        if(!confirm(`${d.campaigns.length}건을 불러올까요? 지금 데이터는 사라져요.`)) return;
+        DB = d; saveDB(); render(); toast('불러왔어요');
+      }catch(err){ alert('파일을 읽지 못했어요: ' + err.message); }
+    };
+    fr.readAsText(file);
+  }
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeSheet();
+  if(e.key === 'Enter' && e.target.id === 'newtask'){
+    const v = e.target.value.trim(); if(!v) return;
+    (state.buf.tasks = state.buf.tasks||[]).push({t:v,done:false}); renderSheet();
+  }
+});
+
+render();
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
