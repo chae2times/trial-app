@@ -6,6 +6,8 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="googlebot" content="noindex,nofollow">
 <title>채이의 글식판 · @just_keep_go_ing</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="avatar.jpg">
 <style>
 :root{
   --bg:#FBF6EC; --bg2:#FFFDF8; --card:#FFFDF8; --line:#EADFCC; --line2:#F0E6D5;
@@ -29,8 +31,9 @@ body{
 /* header */
 header{padding:22px 0 10px}
 .hd{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.logo{width:52px;height:52px;border-radius:16px;background:linear-gradient(150deg,#F7E6D2,#EFD3B6);
-  display:grid;place-items:center;font-size:26px;box-shadow:var(--shadow);border:1px solid #F0E0CB}
+.logo{width:54px;height:54px;border-radius:18px;background:linear-gradient(150deg,#F7E6D2,#EFD3B6);
+  overflow:hidden;box-shadow:var(--shadow);border:1px solid #F0E0CB;flex:0 0 54px;padding:0}
+.logo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 42%;transform:scale(1.02)}
 .ttl{font-size:23px;font-weight:800;letter-spacing:-.4px;margin:0}
 .sub{font-size:12.5px;color:var(--ink2);margin-top:2px}
 .sub b{color:var(--accent2);font-weight:700}
@@ -225,7 +228,7 @@ footer .ln{width:40px;height:1px;background:var(--line);margin:0 auto 14px}
 <div class="wrap">
   <header>
     <div class="hd">
-      <div class="logo">🍱</div>
+      <div class="logo"><img src="avatar.jpg" alt="채이 프로필 캐릭터" width="54" height="54"></div>
       <div>
         <h1 class="ttl">채이의 글식판</h1>
         <div class="sub"><b>@just_keep_go_ing</b> · 스레드 기록 + 멀티채널 콘텐츠 한눈에</div>
