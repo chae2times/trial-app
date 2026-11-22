@@ -36,6 +36,24 @@ header{padding:22px 0 10px}
 .sub b{color:var(--accent2);font-weight:700}
 .hd .spacer{flex:1}
 .pill{font-size:12px;color:var(--ink2);background:#fff;border:1px solid var(--line);padding:6px 11px;border-radius:999px;white-space:nowrap}
+/* ===== channel remote ===== */
+.remote{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 0}
+.rc{position:relative;display:flex;align-items:center;gap:9px;padding:9px 11px;text-decoration:none;color:var(--ink);
+  background:var(--card);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);overflow:hidden;
+  transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease}
+.rc::before{content:"";position:absolute;left:0;right:0;top:0;height:2.5px;background:var(--rc,var(--accent));opacity:.85}
+.rc:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(120,95,70,.16);border-color:#E3D3BC}
+.rc:active{transform:scale(.985)}
+.rc .ic{flex:0 0 30px;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:15px;
+  background:var(--rcsoft,#F6EEE1);border:1px solid rgba(140,110,80,.08)}
+.rc .tx{min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.rc .lb{font-size:13px;font-weight:800;letter-spacing:-.2px;white-space:nowrap}
+.rc .hd{font-size:10.5px;color:var(--ink3);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.rc .go{margin-left:auto;font-size:10.5px;color:var(--ink3);opacity:.7;flex:0 0 auto}
+.rc.thread{--rc:#7A6A58;--rcsoft:#F1EAE0}
+.rc.insta{--rc:#C4788F;--rcsoft:#FBE9EF}
+.rc.blog{--rc:#5E9470;--rcsoft:#E6F3EA}
+.rc.clip{--rc:#4E8A6C;--rcsoft:#E2F1E7}
 /* summary */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0 6px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}
@@ -118,6 +136,12 @@ footer .ln{width:40px;height:1px;background:var(--line);margin:0 auto 14px}
   .list{grid-template-columns:1fr}
   .ttl{font-size:20px}
   .wrap{padding:0 12px 60px}
+  .remote{gap:6px;margin:14px 0 0}
+  .rc{flex-direction:column;gap:5px;padding:9px 4px 8px;border-radius:13px}
+  .rc .ic{width:28px;height:28px;flex:0 0 28px;font-size:14px;border-radius:9px}
+  .rc .tx{align-items:center;line-height:1.1}
+  .rc .lb{font-size:12px;letter-spacing:-.3px}
+  .rc .hd,.rc .go{display:none}
 }
 /* ===== tabs ===== */
 .tabs{display:flex;gap:6px;background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:6px;box-shadow:var(--shadow);margin:14px 0 6px;position:sticky;top:6px;z-index:30}
@@ -210,6 +234,29 @@ footer .ln{width:40px;height:1px;background:var(--line);margin:0 auto 14px}
       <div class="pill" id="collected"></div>
     </div>
   </header>
+
+  <nav class="remote" aria-label="채널 바로가기 리모콘">
+    <a class="rc thread" href="https://www.threads.com/@just_keep_go_ing" target="_blank" rel="noopener" aria-label="쓰레드 @just_keep_go_ing 새 창으로 열기">
+      <span class="ic" aria-hidden="true">🧵</span>
+      <span class="tx"><span class="lb">쓰레드</span><span class="hd">@just_keep_go_ing</span></span>
+      <span class="go" aria-hidden="true">↗</span>
+    </a>
+    <a class="rc insta" href="https://www.instagram.com/just_keep_go_ing/" target="_blank" rel="noopener" aria-label="인스타그램 @just_keep_go_ing 새 창으로 열기">
+      <span class="ic" aria-hidden="true">📸</span>
+      <span class="tx"><span class="lb">인스타</span><span class="hd">@just_keep_go_ing</span></span>
+      <span class="go" aria-hidden="true">↗</span>
+    </a>
+    <a class="rc blog" href="https://m.blog.naver.com/goggamchae2" target="_blank" rel="noopener" aria-label="네이버 블로그 채이의 진솔한 생활일기 새 창으로 열기">
+      <span class="ic" aria-hidden="true">📝</span>
+      <span class="tx"><span class="lb">블로그</span><span class="hd">goggamchae2</span></span>
+      <span class="go" aria-hidden="true">↗</span>
+    </a>
+    <a class="rc clip" href="https://clip.naver.com/@chae2times" target="_blank" rel="noopener" aria-label="네이버 클립 @chae2times 새 창으로 열기">
+      <span class="ic" aria-hidden="true">▶️</span>
+      <span class="tx"><span class="lb">클립</span><span class="hd">@chae2times</span></span>
+      <span class="go" aria-hidden="true">↗</span>
+    </a>
+  </nav>
 
   <div class="tabs" role="tablist">
     <button data-tab="threads" class="on" role="tab">📝 스레드 글식판</button>
