@@ -530,8 +530,10 @@ function bRender(){
   const nx = document.getElementById('bnext');
   if(upcoming.length){
     const first = upcoming[0];
-    const same = upcoming.filter(i=>bKey(i)===bKey(first));
-    nx.innerHTML = `<b>⏭ 다음 예약</b><span>${dm(first.date)} (${wd(first.date)}) ${first.time||''} · ${same.map(i=>`${esc(i.title)}`).join('  /  ')}</span>`;
+    const order = BOARD.channels.map(c=>c.id);
+    const same = upcoming.filter(i=>bKey(i)===bKey(first)).sort((a,b)=>order.indexOf(a.ch)-order.indexOf(b.ch));
+    const label = same.length > 2 ? `${esc(same[0].title)} 외 ${same.length-1}건` : same.map(i=>esc(i.title)).join('  /  ');
+    nx.innerHTML = `<b>⏭ 다음 예약</b><span>${dm(first.date)} (${wd(first.date)}) ${first.time||''} · ${label}</span>`;
   } else { nx.innerHTML = ''; }
 
   const rows = bSort(bItems());
